@@ -1,0 +1,30 @@
+<launch>
+	<!-- launch all connected sensors -->
+  	<include file="$(find launchfiles)/launch/kinect.launch" />
+	<include file="$(find launchfiles)/launch/laser_urg04lx.launch" />
+
+	<!-- launch robot node -->
+  	<include file="$(find launchfiles)/launch/robotino_node.launch" />
+
+	<!--- Navigation launch -->
+	<include file="$(find launchfiles)/launch/test_robotino_navigation.launch" />
+
+  	<!--- Kinect person detection -->
+  	<node pkg="openni_tracker" type="openni_tracker" name="openni_tracker">
+		<param name="camera_frame_id" value="/camera_depth_frame"/>
+  	</node>
+
+ 
+	<!--- Laser Person Detection -->
+	<node pkg="person_detection" type="person_detection" name="person_detection" output="screen">
+		<param name="scanTopic" value="/scan"/>
+		<param name="poseFrameRobot" value="/laser_link"/>
+	</node>
+
+	  <!--- Kinect person preparation -->
+  	<node pkg="openni_person_preparation" type="openni_person_preparation" name="openni_person_preparation" output="screen">
+		<param name="openni_header_frame" value="/camera_depth_frame"/>
+		<param name="left_foot_frame" value="left_foot_"/>
+		<param name="right_foot_frame" value="right_foot_"/>
+	</node>
+</launch>
